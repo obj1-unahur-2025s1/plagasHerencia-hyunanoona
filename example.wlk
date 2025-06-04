@@ -1,21 +1,30 @@
 // elementos que pueden ser atacados
 
 class Hogar{
-  const nivelDeMugre
+  var nivelDeMugre
   const confort
   
   method esBueno() = nivelDeMugre <= confort * 0.5
+  
+  method recibirAtaque(unaPlaga) {nivelDeMugre = nivelDeMugre + unPlaga.nivelDeDaño()}
 }
 
 class Huerta{
-  const capacidadDeProduccion
+  var capacidadDeProduccion
   var nivelMinimo
   
   method esBueno() = capacidadDeProduccion > nivelMinimo
+  
+  method recibirAtaque(unaPlaga) {
+    capacidadDeProduccion = capacidadDeProduccion - (unaPlaga.nivelDeDaño()*10)/100
+    if (unaPlaga.transmiteEnfermedades()) {
+      capacidadDeProduccion = capacidadDeProduccion - 10
+    }
+  }
 }
 
 class Mascota{
-  const nivelDeSalud
+  var nivelDeSalud
   
   method esBueno() = nivelDeSalud > 250
 }
@@ -39,7 +48,10 @@ class Barrio{
 //plagas
 
 class Plaga{
-  var poblacion
+  const poblacion
+  
+  //method nivelDeDaño() = poblacion
+  
   method transmiteEnfermedades() = poblacion > 10
 }
 
@@ -51,79 +63,17 @@ class Cucarachas inherits Plaga{
   override method transmiteEnfermedades() = super() and pesoPromedio >= 10
 }
 
-class Pulgas{
+class Pulgas inherits Plaga{
   method nivelDeDaño() = poblacion * 2
 }
 
-
-
-
-
-
-
-
-
-
-// elementos que pueden ser atacados
-
-class Hogar{
-  const nivelDeMugre
-  const confort
+class Garrapatas inherits Pulgas{
   
-  method esBueno() = nivelDeMugre <= confort * 0.5
 }
 
-class Huerta{
-  const capacidadDeProduccion
-  var nivelMinimo
-  
-  method esBueno() = capacidadDeProduccion > nivelMinimo
+class Mosquitos inherits Plaga{
+  override method transmiteEnfermedades() = super() and poblacion % 3 == 0
 }
-
-class Mascota{
-  const nivelDeSalud
-  
-  method esBueno() = nivelDeSalud > 250
-}
-
-
-// barrios
-
-class Barrio{
-  var elementos 
-  
-  method esElementoBueno(unElemento) = unElemento.esBueno()
-  
-  method elementosBuenos() = elementos.filter{e => e.esBueno()}.size()
-  
-  method elementosNoBuenos() = elementos.filter{e => not e.esBueno()}.size()
-  
-  method esBarrioCopado() = self.elementosBuenos() > self.elementosNoBuenos()
-}
-
-
-//plagas
-
-class Plaga{
-  var poblacion
-  method transmiteEnfermedades() = poblacion > 10
-}
-
-class Cucarachas inherits Plaga{
-  var pesoPromedio
-  
-  method nivelDeDaño() = poblacion * 0.5
-  
-  override method transmiteEnfermedades() = super() and pesoPromedio >= 10
-}
-
-class Pulgas{
-  method nivelDeDaño() = poblacion * 2
-}
-
-
-
-
 
 
 
