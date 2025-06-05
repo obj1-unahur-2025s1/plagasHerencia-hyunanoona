@@ -4,9 +4,9 @@ class Hogar{
   var nivelDeMugre
   const confort
   
-  method esBueno() = nivelDeMugre <= confort * 0.5
+  method esBueno() = nivelDeMugre * 0.5 <= confort
   
-  method recibirAtaque(unaPlaga) {nivelDeMugre = nivelDeMugre + unPlaga.nivelDeDaño()}
+  method recibirAtaque(unaPlaga) {nivelDeMugre = nivelDeMugre + unaPlaga.nivelDeDaño()}
 }
 
 class Huerta{
@@ -27,6 +27,12 @@ class Mascota{
   var nivelDeSalud
   
   method esBueno() = nivelDeSalud > 250
+
+  method recibirAtaque(unaPlaga){
+    if (unaPlaga.transmiteEnfermedades()){
+      nivelDeSalud = nivelDeSalud - unaPlaga.nivelDeDaño()
+    }
+  }
 }
 
 
@@ -42,37 +48,6 @@ class Barrio{
   method elementosNoBuenos() = elementos.filter{e => not e.esBueno()}.size()
   
   method esBarrioCopado() = self.elementosBuenos() > self.elementosNoBuenos()
-}
-
-
-//plagas
-
-class Plaga{
-  const poblacion
-  
-  //method nivelDeDaño() = poblacion
-  
-  method transmiteEnfermedades() = poblacion > 10
-}
-
-class Cucarachas inherits Plaga{
-  var pesoPromedio
-  
-  method nivelDeDaño() = poblacion * 0.5
-  
-  override method transmiteEnfermedades() = super() and pesoPromedio >= 10
-}
-
-class Pulgas inherits Plaga{
-  method nivelDeDaño() = poblacion * 2
-}
-
-class Garrapatas inherits Pulgas{
-  
-}
-
-class Mosquitos inherits Plaga{
-  override method transmiteEnfermedades() = super() and poblacion % 3 == 0
 }
 
 
